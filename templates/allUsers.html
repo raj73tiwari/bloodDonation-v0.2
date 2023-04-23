@@ -1,0 +1,59 @@
+
+{% extends 'base.html' %} {% block body %}
+
+<div class="row ">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-row justify-content-between">
+            <h4 class="card-title mb-1">All Users</h4>
+            
+          </div>
+          {% if user_lis|length==0 %}
+          <h3 class="text-center pt-5" style="  color:rgb(102, 99, 99)">Sorry, no users to show.</h3>
+          {% else %}
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th> Name </th>
+                  <th> User Id </th>
+                  <th> Email </th>
+                  <th> Contact </th>
+                  <th> Blood type </th>
+                  <th> Age </th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {% for u in user_lis %}
+                    
+                
+                <tr>
+                  
+                  <td> {{u.name}}</td>
+                  <td> {{u.id}} </td>
+                  <td> {{u.email}} </td>
+                  <td> {{u.contact}}</td>
+                  <td> {{u.blood}} </td>
+                  <td> {{u.age}} </td>
+                  
+                    
+                  
+                </tr>
+                {% endfor %}
+                
+                
+                
+              </tbody>
+            </table>
+          </div>
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+{% endblock body %}

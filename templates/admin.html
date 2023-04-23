@@ -1,0 +1,580 @@
+
+
+{% extends 'base.html' %} {% block body %}
+<input type="text" id="dValue" style="display: none" value="{{ dValue  }}">
+<input type="text" id="dLabel" style="display: none" value="{{ dLabel  }}">
+<input type="text" id="dTotal" style="display: none" value="{{ dTotal  }}">
+    
+<div class="row">
+    <div class="col-sm-4 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h4>Scheduled Appointments</h4>
+          <div class="row">
+            <div class="col-8 col-sm-12 col-xl-8 my-auto">
+              <div class="d-flex d-sm-block d-md-flex align-items-center">
+                <h2 class="mb-0">{{scheduled_app|length}}</h2>
+                
+              </div>
+              <h6 class="text-muted font-weight-normal">appointments</h6>
+            </div>
+            <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+              <i class="icon-lg mdi mdi-calendar text-primary ml-auto"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h5>Pending Requests</h5>
+          <div class="row">
+            <div class="col-8 col-sm-12 col-xl-8 my-auto">
+              <div class="d-flex d-sm-block d-md-flex align-items-center">
+                <h2 class="mb-0">{{pending_app|length}}</h2>
+                
+              </div>
+              <h6 class="text-muted font-weight-normal"> requests</h6>
+            </div>
+            <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+              <i class="icon-lg mdi mdi-timer-sand text-warning ml-auto"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h5>Current Inventory</h5>
+          <div class="row">
+            <div class="col-8 col-sm-12 col-xl-8 my-auto ">
+              <div class="d-flex d-sm-block d-md-flex align-items-center">
+                <h2 class="mb-0">{{dTotal}}</h2>
+              </div>
+              <h6 class="text-muted font-weight-normal">units</h6>
+            </div>
+            <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+              <i class="icon-lg mdi mdi-fire text-danger ml-auto"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row ">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-row justify-content-between">
+            <h4 class="card-title mb-1">Pending Requests</h4>
+          </div>
+          {% if pending_app|length==0 %}
+          <h3 class="text-center pt-5" style="  color:rgb(102, 99, 99)">Sorry, no requests are pending.</h3>
+          {% else %}
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th> Name </th>
+                  <th> User Id </th>
+                  <th> Donate/Receive </th>
+                  <th> Contact </th>
+                  <th> Blood type </th>
+                  <th> Availibility </th>
+                  <th> Appointment Date </th>
+                  <th> Accept/Reject </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for appoint in pending_app %}
+                    
+                
+                <tr>
+                  
+                  <td> {{appoint.user.name}}</td>
+                  <td> {{appoint.user.id}} </td>
+                  <td>
+                  {% if appoint.donate %}
+                  <div class="badge badge-outline-danger">Donate</div>
+                  {% else %}
+                    <div class="badge badge-outline-success">Receive</div>
+                  {% endif %}</td>
+                  <td> {{appoint.user.contact}}</td>
+                  <td> {{appoint.user.blood}} </td>
+                  {% if appoint.donate %}
+                  {% if av_blood[appoint.user.blood]<=0 %}
+                  <td class="text-danger"> {{av_blood[appoint.user.blood]}} </td>
+                  {% else %}
+                  <td class="text-info"> {{av_blood[appoint.user.blood]}} </td>
+                  {% endif %}
+                  {% else %}
+                    {% if appoint.user.blood=='O +' %}
+                    {% if av_blood['O +']>0 or av_blood['O -']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['O +']>0 %}
+                     O+ 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                     O-
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                        
+                    {% elif appoint.user.blood=='A +' %}
+                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['A -']>0 or av_blood['A +']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['O +']>0 %}
+                     O+ 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                    O- 
+                    {% endif %}
+                    {% if av_blood['A -']>0 %}
+                    A- 
+                    {% endif %}
+                    {% if av_blood['A +']>0 %}
+                    A+ 
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    {% elif appoint.user.blood=='B +' %}
+                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['B -']>0 or av_blood['B +']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['O +']>0 %}
+                     O+ 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                    O- 
+                    {% endif %}
+                    {% if av_blood['B -']>0 %}
+                    B- 
+                    {% endif %}
+                    {% if av_blood['B +']>0 %}
+                    B+ 
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+
+                    {% elif appoint.user.blood=='AB +' %}
+                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['A -']>0 or av_blood['A +']>0 or av_blood['B +']>0 or av_blood['B -']>0 or av_blood['AB -']>0 or av_blood['AB -']>0%}
+                    <td class="text-success">
+                    {% if av_blood['O +']>0 %}
+                     O+ 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                    O- 
+                    {% endif %}
+                    {% if av_blood['A -']>0 %}
+                    A- 
+                    {% endif %}
+                    {% if av_blood['A +']>0 %}
+                    A+ 
+                    {% endif %}
+                    {% if av_blood['B +']>0 %}
+                    B+ 
+                    {% endif %}
+                    {% if av_blood['B -']>0 %}
+                    B-
+                    {% endif %}
+                    {% if av_blood['AB +']>0 %}
+                    AB+ 
+                    {% endif %}
+                    {% if av_blood['AB -']>0 %}
+                    AB- 
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    {% elif appoint.user.blood=='O -' %}
+                    {% if av_blood['O -']>0 %}
+                    <td class="text-success"> O- </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    {% elif appoint.user.blood=='A -' %}
+                    {% if av_blood['A -']>0 or av_blood['O -']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['A -']>0 %}
+                     A- 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                     O-
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    {% elif appoint.user.blood=='B -' %}
+                    {% if av_blood['B -']>0 or av_blood['O -']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['B -']>0 %}
+                     B- 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                     O-
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    
+                        
+                    {% else %}
+                    {% if av_blood['O -']>0 or av_blood['A -']>0 or av_blood['B -']>0 or av_blood['AB -']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['O -']>0 %}
+                     O-
+                    {% endif %}
+                    {% if av_blood['B -']>0 %}
+                    B- 
+                    {% endif %}
+                    {% if av_blood['A -']>0 %}
+                    A- 
+                    {% endif %}
+                    {% if av_blood['AB -']>0 %}
+                    AB- 
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %} 
+                    {% endif %}
+                  {% endif %}
+                  <td> {{appoint.appointment_time}} </td>
+                  <td> <a href="/accApp/{{appoint.id}}"><button type="button" class="btn btn-inverse-success  btn-icon mr-3 ml-2 " style="height:30px;width:30px">
+                    <i class="mdi mdi-calendar-check"></i>
+                  </button></a>
+                  <a href="/delApp/{{appoint.id}}"><button type="button" class="btn btn-inverse-danger  btn-icon " style="height:30px;width:30px">
+                    <i class="mdi mdi-delete"></i>
+                  </button></a> </td>
+                  <td>
+                    
+                  </td>
+                </tr>
+                {% endfor %}
+                
+                
+                
+              </tbody>
+            </table>
+          </div>
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row ">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-row justify-content-between">
+            <h4 class="card-title mb-1">Scheduled Appointments</h4>
+          </div>
+          {% if scheduled_app|length==0 %}
+          <h3 class="text-center pt-5" style="  color:rgb(102, 99, 99)">Sorry, no appointments are scheduled.</h3>
+          {% else %}
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th> Name </th>
+                  <th> User Id </th>
+                  <th> Donate/Receive </th>
+                  <th> Contact </th>
+                  <th> Blood type </th>
+                  <th> Availibility </th>
+                  <th> Appointment Date </th>
+                  <th> Success/Fail </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for appoint in scheduled_app %}
+                    
+                
+                <tr>
+                  
+                  <td> {{appoint.user.name}}</td>
+                  <td> {{appoint.user.id}} </td>
+                  <td>
+                  {% if appoint.donate %}
+                  <div class="badge badge-outline-danger">Donate</div>
+                  {% else %}
+                    <div class="badge badge-outline-success">Receive</div>
+                  {% endif %}</td>
+                  <td> {{appoint.user.contact}}</td>
+                  <td> {{appoint.user.blood}} </td>
+                  {% if appoint.donate %}
+                  {% if av_blood[appoint.user.blood]<=0 %}
+                  <td class="text-danger"> {{av_blood[appoint.user.blood]}} </td>
+                  {% else %}
+                  <td class="text-info"> {{av_blood[appoint.user.blood]}} </td>
+                  {% endif %}
+                  {% else %}
+                    {% if appoint.user.blood=='O +' %}
+                    {% if av_blood['O +']>0 or av_blood['O -']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['O +']>0 %}
+                     O+ 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                     O-
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                        
+                    {% elif appoint.user.blood=='A +' %}
+                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['A -']>0 or av_blood['A +']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['O +']>0 %}
+                     O+ 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                    O- 
+                    {% endif %}
+                    {% if av_blood['A -']>0 %}
+                    A- 
+                    {% endif %}
+                    {% if av_blood['A +']>0 %}
+                    A+ 
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    {% elif appoint.user.blood=='B +' %}
+                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['B -']>0 or av_blood['B +']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['O +']>0 %}
+                     O+ 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                    O- 
+                    {% endif %}
+                    {% if av_blood['B -']>0 %}
+                    B- 
+                    {% endif %}
+                    {% if av_blood['B +']>0 %}
+                    B+ 
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+
+                    {% elif appoint.user.blood=='AB +' %}
+                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['A -']>0 or av_blood['A +']>0 or av_blood['B +']>0 or av_blood['B -']>0 or av_blood['AB -']>0 or av_blood['AB -']>0%}
+                    <td class="text-success">
+                    {% if av_blood['O +']>0 %}
+                     O+ 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                    O- 
+                    {% endif %}
+                    {% if av_blood['A -']>0 %}
+                    A- 
+                    {% endif %}
+                    {% if av_blood['A +']>0 %}
+                    A+ 
+                    {% endif %}
+                    {% if av_blood['B +']>0 %}
+                    B+ 
+                    {% endif %}
+                    {% if av_blood['B -']>0 %}
+                    B-
+                    {% endif %}
+                    {% if av_blood['AB +']>0 %}
+                    AB+ 
+                    {% endif %}
+                    {% if av_blood['AB -']>0 %}
+                    AB- 
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    {% elif appoint.user.blood=='O -' %}
+                    {% if av_blood['O -']>0 %}
+                    <td class="text-success"> O- </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    {% elif appoint.user.blood=='A -' %}
+                    {% if av_blood['A -']>0 or av_blood['O -']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['A -']>0 %}
+                     A- 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                     O-
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    {% elif appoint.user.blood=='B -' %}
+                    {% if av_blood['B -']>0 or av_blood['O -']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['B -']>0 %}
+                     B- 
+                    {% endif %}
+                    {% if av_blood['O -']>0 %}
+                     O-
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %}
+                    
+                        
+                    {% else %}
+                    {% if av_blood['O -']>0 or av_blood['A -']>0 or av_blood['B -']>0 or av_blood['AB -']>0 %}
+                    <td class="text-success">
+                    {% if av_blood['O -']>0 %}
+                     O-
+                    {% endif %}
+                    {% if av_blood['B -']>0 %}
+                    B- 
+                    {% endif %}
+                    {% if av_blood['A -']>0 %}
+                    A- 
+                    {% endif %}
+                    {% if av_blood['AB -']>0 %}
+                    AB- 
+                    {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="text-danger"> N.A. </td>
+                    {% endif %} 
+                    {% endif %}
+                  {% endif %}
+                  <td> {{appoint.appointment_time}} </td>
+                  <td> <a href="/sTransaction/{{appoint.id}}"><button type="button" class="btn btn-inverse-success  btn-icon mr-3 ml-2 " style="height:30px;width:30px">
+                    <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+                  </button></a>
+                  <a href="/delApp/{{appoint.id}}"><button type="button" class="btn btn-inverse-danger  btn-icon " style="height:30px;width:30px">
+                    <i class="mdi mdi-close-box-outline"></i>
+                  </button></a> </td>
+                  <td>
+                    
+                  </td>
+                </tr>
+                {% endfor %}
+                
+                
+                
+              </tbody>
+            </table>
+          </div>
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+ 
+<div class="row">
+  <div class="col-md-4 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Available Units</h4>
+        <canvas id="transaction-history" class="transaction-chart"></canvas>
+        <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+          <div class="text-md-center text-xl-left">
+            <h6 class="mb-1">+ve Blood Group Count</h6>
+            <p class="text-muted mb-0">O+ : {{av_blood['O +']}} &nbsp;|&nbsp; A+ : {{av_blood['A +']}} &nbsp;|&nbsp; B+ : {{av_blood['B +']}} &nbsp;| AB+ :{{av_blood['AB +']}}</p>
+          </div>
+          
+        </div>
+        <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+          <div class="text-md-center text-xl-left">
+            <h6 class="mb-1">-ve Blood Count</h6>
+            <p class="text-muted mb-0">O- : {{av_blood['O -']}} &nbsp;|&nbsp; A- : {{av_blood['A -']}} &nbsp;|&nbsp; B- : {{av_blood['B -']}} &nbsp;|&nbsp; AB- : {{av_blood['AB -']}}</p>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+          <h4 class="card-title mb-1">Recent Transaction </h4>
+          <p class="text-muted mb-1">Donor/Receiver</p>
+        </div>
+        {% if recent_trans|length==0 %}
+        <h2>Sorry, no transactions to show.</h2>
+
+        {% else %}
+
+        <div class="row">
+          <div class="col-12">
+            <div class="preview-list">
+              {% for trans in recent_trans %} {% if trans.donate %}
+              <div class="preview-item border-bottom">
+                <div class="preview-thumbnail">
+                  <div class="preview-icon bg-danger">
+                    <i class="mdi mdi-fire"></i>
+                  </div>
+                </div>
+                <div class="preview-item-content d-sm-flex flex-grow">
+                  <div class="flex-grow">
+                    <h6 class="preview-subject">Blood Donation</h6>
+                    <p class="text-muted mb-0">On : {{trans.time}}</p>
+                  </div>
+                  <div class="mr-auto text-sm-right pt-2 pt-sm-0 ">
+                    {{trans.user.name}}
+                    <div class="badge badge-outline-danger mr-2 ml-3">{{trans.user.blood}}</div>
+
+                    
+                  </div>
+                  
+                </div>
+              </div>
+              {% else %}
+              <div class="preview-item border-bottom">
+                <div class="preview-thumbnail">
+                  <div class="preview-icon bg-success">
+                    <i class="mdi mdi-filter"></i>
+                  </div>
+                </div>
+                <div class="preview-item-content d-sm-flex flex-grow">
+                  <div class="flex-grow">
+                    <h6 class="preview-subject">Blood Receive</h6>
+                    <p class="text-muted mb-0">On : {{trans.time}}</p>
+                  </div>
+                  <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                    {{trans.user.name}}
+                    <div class="badge badge-outline-success mr-2 ml-3">{{trans.user.blood}}</div>
+                    
+                  </div>
+                </div>
+              </div>
+              {% endif %} {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock body %}
+

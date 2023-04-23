@@ -1,0 +1,54 @@
+
+{% extends 'base.html' %}
+{% block body %}
+<input type="text" id="dValue" style="display: none" value="{{ dValue  }}">
+<input type="text" id="dLabel" style="display: none" value="{{ dLabel  }}">
+<div class=" grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Bar chart</h4>
+        <canvas id="barChart" style="height:230px"></canvas>
+      </div>
+    </div>
+  </div>
+
+<div class="grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Available Blood Units</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Blood Type</th>
+                <th>Quantity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for bl in av_bl %}
+                    
+                
+              <tr>
+                <td>{{bl}}</td>
+                <td>{{av_bl[bl]}}</td>
+                {% if av_bl[bl]<=0 %}
+                <td><label class="badge badge-danger">Not Available !</label></td>
+                {% elif av_bl[bl]<8 %}
+                <td><label class="badge badge-warning">Low Quantity!</label></td>
+                {% else %}
+                 <td><label class="badge badge-success">Sufficient</label></td>   
+                {% endif %}
+                
+              </tr>
+             {% endfor %}
+              
+              
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

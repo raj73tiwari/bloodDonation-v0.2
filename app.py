@@ -220,19 +220,12 @@ def delApp(id):
 @app.route("/admin",methods=['GET','POST'])
 @login_required
 def admin():
-    all_appoint=Appointment.query.all()
-    scheduled_app=[]
-    pending_app=[]
-    for appoint in all_appoint:
-        if appoint.status==True:
-            scheduled_app.append(appoint)
-        elif appoint.status is None:
-            pending_app.append(appoint)
-    pending_app.sort(key=lambda appoint: datetime.strptime(appoint.appointment_time, '%Y-%m-%d'))
-    scheduled_app.sort(key=lambda appoint: datetime.strptime(appoint.appointment_time, '%Y-%m-%d'))
+    pending_app,scheduled_app=sort_appointment()
     av_bl,dTotal,dLabel,dValue=av_blood()
+    av_comp_bl=avl_comp_bl()
     recent_trans= Transaction.query.order_by(Transaction.time.desc()).limit(5).all()
-    return render_template('admin.html',scheduled_app=scheduled_app,pending_app=pending_app,av_blood=av_bl,recent_trans=recent_trans,dValue=dValue,dLabel=dLabel,dTotal=dTotal)
+    
+    return render_template('admin.html',scheduled_app=scheduled_app,pending_app=pending_app,av_blood=av_bl,recent_trans=recent_trans,dValue=dValue,dLabel=dLabel,dTotal=dTotal,avl_comp_bl=av_comp_bl)
 
 @app.route("/accApp/<int:id>",methods=['GET','POST'])
 @login_required
@@ -243,20 +236,30 @@ def accApp(id):
     flash("Appointment scheduled !",category='success')
     return redirect('/admin')
 
-@app.route("/sTransaction/<int:id>",methods=['GET','POST'])
+@app.route("/sDon/<int:id>",methods=['GET','POST'])
 @login_required
-def strans(id):
+def sDon(id):
     curr_appoint=Appointment.query.filter_by(id=id).first()
     curr_trans=Transaction(user_id=curr_appoint.user_id,donate=curr_appoint.donate)
     blood=Blood.query.filter_by(type=curr_appoint.user.blood).first()
-    if curr_appoint.donate:
-        blood.quantity+=1
-    else:
-        blood.quantity-=1
+    blood.quantity+=1
     db.session.add(curr_trans)
     db.session.delete(curr_appoint)
     db.session.commit()
-    flash("Blood transaction executed successfully!",category='success')
+    flash("Blood donation executed successfully!",category='success')
+    return redirect('/admin')
+
+@app.route("/sRec/<int:id>/<bl>",methods=['GET','POST'])
+@login_required
+def sRec(id,bl):
+    curr_appoint=Appointment.query.filter_by(id=id).first()
+    curr_trans=Transaction(user_id=curr_appoint.user_id,donate=curr_appoint.donate)
+    blood=Blood.query.filter_by(type=bl).first()
+    blood.quantity-=1
+    db.session.add(curr_trans)
+    db.session.delete(curr_appoint)
+    db.session.commit()
+    flash("Blood successfully received by user !",category='success')
     return redirect('/admin')
 
 def av_blood():
@@ -272,6 +275,40 @@ def av_blood():
         dValue+=" "+str(blood.quantity)
         dTotal+=blood.quantity
     return blood_dict,dTotal,dLabel,dValue
+
+def sort_appointment():
+    all_appoint=Appointment.query.all()
+    scheduled_app=[]
+    pending_app=[]
+    for appoint in all_appoint:
+        if appoint.status==True:
+            scheduled_app.append(appoint)
+        elif appoint.status is None:
+            pending_app.append(appoint)
+    pending_app.sort(key=lambda appoint: datetime.strptime(appoint.appointment_time, '%Y-%m-%d'))
+    scheduled_app.sort(key=lambda appoint: datetime.strptime(appoint.appointment_time, '%Y-%m-%d'))
+    return pending_app,scheduled_app
+
+def avl_comp_bl():
+    pending_app,scheduled_app=sort_appointment()
+    av_bl,dTotal,dLabel,dValue=av_blood()
+    avl_comp_bl={}
+    compatible_bl={'O +':['O +','O -'],'A +':['O +','O -','A +','A -'],'B +':['O +','O -','B +','B -'],'AB +':['O -','A -','B -','AB -','O +','A +','B +','AB +'],'O -':['O -'],'A -':['O -','A -'],'B -':['O -','B -'],'AB -':['O -','A -','B -','AB -']}
+    for app in scheduled_app:
+        if not app.donate:
+            donors=compatible_bl[app.user.blood]
+            avl=[]
+            for i in donors:
+                if av_bl[i]>0:
+                    avl.append(i)
+            avl_comp_bl[app.user.blood]=avl
+    print(avl_comp_bl)
+    return avl_comp_bl
+        
+
+
+
+
 
 
 

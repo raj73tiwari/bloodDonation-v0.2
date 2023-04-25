@@ -112,144 +112,17 @@
                   <td class="text-info"> {{av_blood[appoint.user.blood]}} </td>
                   {% endif %}
                   {% else %}
-                    {% if appoint.user.blood=='O +' %}
-                    {% if av_blood['O +']>0 or av_blood['O -']>0 %}
+                    {% if avl_comp_bl[appoint.user.blood]|length == 0 %}
+                    <td class="text-danger"> N.A </td>
+                    {% else %}
                     <td class="text-success">
-                    {% if av_blood['O +']>0 %}
-                     O+ 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                     O-
-                    {% endif %}
+                    {% for bl in avl_comp_bl[appoint.user.blood] %}
+                    {{bl}} 
+                    {% endfor %}
                     </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                        
-                    {% elif appoint.user.blood=='A +' %}
-                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['A -']>0 or av_blood['A +']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['O +']>0 %}
-                     O+ 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                    O- 
-                    {% endif %}
-                    {% if av_blood['A -']>0 %}
-                    A- 
-                    {% endif %}
-                    {% if av_blood['A +']>0 %}
-                    A+ 
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                    {% elif appoint.user.blood=='B +' %}
-                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['B -']>0 or av_blood['B +']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['O +']>0 %}
-                     O+ 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                    O- 
-                    {% endif %}
-                    {% if av_blood['B -']>0 %}
-                    B- 
-                    {% endif %}
-                    {% if av_blood['B +']>0 %}
-                    B+ 
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-
-                    {% elif appoint.user.blood=='AB +' %}
-                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['A -']>0 or av_blood['A +']>0 or av_blood['B +']>0 or av_blood['B -']>0 or av_blood['AB -']>0 or av_blood['AB -']>0%}
-                    <td class="text-success">
-                    {% if av_blood['O +']>0 %}
-                     O+ 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                    O- 
-                    {% endif %}
-                    {% if av_blood['A -']>0 %}
-                    A- 
-                    {% endif %}
-                    {% if av_blood['A +']>0 %}
-                    A+ 
-                    {% endif %}
-                    {% if av_blood['B +']>0 %}
-                    B+ 
-                    {% endif %}
-                    {% if av_blood['B -']>0 %}
-                    B-
-                    {% endif %}
-                    {% if av_blood['AB +']>0 %}
-                    AB+ 
-                    {% endif %}
-                    {% if av_blood['AB -']>0 %}
-                    AB- 
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                    {% elif appoint.user.blood=='O -' %}
-                    {% if av_blood['O -']>0 %}
-                    <td class="text-success"> O- </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                    {% elif appoint.user.blood=='A -' %}
-                    {% if av_blood['A -']>0 or av_blood['O -']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['A -']>0 %}
-                     A- 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                     O-
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                    {% elif appoint.user.blood=='B -' %}
-                    {% if av_blood['B -']>0 or av_blood['O -']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['B -']>0 %}
-                     B- 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                     O-
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
+                    
                     {% endif %}
                     
-                        
-                    {% else %}
-                    {% if av_blood['O -']>0 or av_blood['A -']>0 or av_blood['B -']>0 or av_blood['AB -']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['O -']>0 %}
-                     O-
-                    {% endif %}
-                    {% if av_blood['B -']>0 %}
-                    B- 
-                    {% endif %}
-                    {% if av_blood['A -']>0 %}
-                    A- 
-                    {% endif %}
-                    {% if av_blood['AB -']>0 %}
-                    AB- 
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %} 
-                    {% endif %}
                   {% endif %}
                   <td> {{appoint.appointment_time}} </td>
                   <td> <a href="/accApp/{{appoint.id}}"><button type="button" class="btn btn-inverse-success  btn-icon mr-3 ml-2 " style="height:30px;width:30px">
@@ -316,161 +189,49 @@
                   <td> {{appoint.user.contact}}</td>
                   <td> {{appoint.user.blood}} </td>
                   {% if appoint.donate %}
-                  {% if av_blood[appoint.user.blood]<=0 %}
-                  <td class="text-danger"> {{av_blood[appoint.user.blood]}} </td>
+                    {% if av_blood[appoint.user.blood]<=0 %}
+                    <td class="text-danger"> {{av_blood[appoint.user.blood]}} </td>
+                    {% else %}
+                    <td class="text-info"> {{av_blood[appoint.user.blood]}} </td>
+                    {% endif %}
                   {% else %}
-                  <td class="text-info"> {{av_blood[appoint.user.blood]}} </td>
-                  {% endif %}
-                  {% else %}
-                    {% if appoint.user.blood=='O +' %}
-                    {% if av_blood['O +']>0 or av_blood['O -']>0 %}
+                    {% if avl_comp_bl[appoint.user.blood]|length == 0 %}
+                    <td class="text-danger"> N.A </td>
+                    {% else %}
                     <td class="text-success">
-                    {% if av_blood['O +']>0 %}
-                     O+ 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                     O-
-                    {% endif %}
+                    {% for bl in avl_comp_bl[appoint.user.blood] %}
+                    {{bl}} 
+                    {% endfor %}
                     </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                        
-                    {% elif appoint.user.blood=='A +' %}
-                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['A -']>0 or av_blood['A +']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['O +']>0 %}
-                     O+ 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                    O- 
-                    {% endif %}
-                    {% if av_blood['A -']>0 %}
-                    A- 
-                    {% endif %}
-                    {% if av_blood['A +']>0 %}
-                    A+ 
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                    {% elif appoint.user.blood=='B +' %}
-                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['B -']>0 or av_blood['B +']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['O +']>0 %}
-                     O+ 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                    O- 
-                    {% endif %}
-                    {% if av_blood['B -']>0 %}
-                    B- 
-                    {% endif %}
-                    {% if av_blood['B +']>0 %}
-                    B+ 
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-
-                    {% elif appoint.user.blood=='AB +' %}
-                    {% if av_blood['O +']>0 or av_blood['O -']>0 or av_blood['A -']>0 or av_blood['A +']>0 or av_blood['B +']>0 or av_blood['B -']>0 or av_blood['AB -']>0 or av_blood['AB -']>0%}
-                    <td class="text-success">
-                    {% if av_blood['O +']>0 %}
-                     O+ 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                    O- 
-                    {% endif %}
-                    {% if av_blood['A -']>0 %}
-                    A- 
-                    {% endif %}
-                    {% if av_blood['A +']>0 %}
-                    A+ 
-                    {% endif %}
-                    {% if av_blood['B +']>0 %}
-                    B+ 
-                    {% endif %}
-                    {% if av_blood['B -']>0 %}
-                    B-
-                    {% endif %}
-                    {% if av_blood['AB +']>0 %}
-                    AB+ 
-                    {% endif %}
-                    {% if av_blood['AB -']>0 %}
-                    AB- 
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                    {% elif appoint.user.blood=='O -' %}
-                    {% if av_blood['O -']>0 %}
-                    <td class="text-success"> O- </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                    {% elif appoint.user.blood=='A -' %}
-                    {% if av_blood['A -']>0 or av_blood['O -']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['A -']>0 %}
-                     A- 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                     O-
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
-                    {% elif appoint.user.blood=='B -' %}
-                    {% if av_blood['B -']>0 or av_blood['O -']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['B -']>0 %}
-                     B- 
-                    {% endif %}
-                    {% if av_blood['O -']>0 %}
-                     O-
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %}
                     
-                        
-                    {% else %}
-                    {% if av_blood['O -']>0 or av_blood['A -']>0 or av_blood['B -']>0 or av_blood['AB -']>0 %}
-                    <td class="text-success">
-                    {% if av_blood['O -']>0 %}
-                     O-
-                    {% endif %}
-                    {% if av_blood['B -']>0 %}
-                    B- 
-                    {% endif %}
-                    {% if av_blood['A -']>0 %}
-                    A- 
-                    {% endif %}
-                    {% if av_blood['AB -']>0 %}
-                    AB- 
-                    {% endif %}
-                    </td>
-                    {% else %}
-                    <td class="text-danger"> N.A. </td>
-                    {% endif %} 
                     {% endif %}
                   {% endif %}
                   <td> {{appoint.appointment_time}} </td>
-                  <td> <a href="/sTransaction/{{appoint.id}}"><button type="button" class="btn btn-inverse-success  btn-icon mr-3 ml-2 " style="height:30px;width:30px">
-                    <i class="mdi mdi-checkbox-marked-circle-outline"></i>
-                  </button></a>
+
+                  
+                  <td>
+                    {% if appoint.donate %}
+                    <a href="/sDon/{{appoint.id}}"><button type="button" class="btn btn-inverse-success  btn-icon mr-3 ml-2 " style="height:30px;width:30px">
+                        <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+                      </button></a>
+                    {% else %}
+                    {% for bl in avl_comp_bl[appoint.user.blood] %}
+                    <a href="/sRec/{{appoint.id}}/{{bl}}"><button type="button" class="btn btn-inverse-success  btn-icon mr-3 ml-2 " style="height:30px;width:30px">
+                        {{bl}}
+                      </button></a>
+
+                    {% endfor %}
+
+                        
+                    {% endif %} 
+                    
+                  
                   <a href="/delApp/{{appoint.id}}"><button type="button" class="btn btn-inverse-danger  btn-icon " style="height:30px;width:30px">
                     <i class="mdi mdi-close-box-outline"></i>
                   </button></a> </td>
-                  <td>
+                  
                     
-                  </td>
+                  
                 </tr>
                 {% endfor %}
                 

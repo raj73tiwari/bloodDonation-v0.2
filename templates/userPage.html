@@ -8,7 +8,15 @@
       <div class="card-body">
         <h4 class="card-title">Transaction History</h4>
         <canvas id="transaction-history" class="transaction-chart"></canvas>
+        
         <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+          {% if rec_trans|length ==0 %}
+        <h4>No Transactions to show !</h4>
+        {% else %}
+            
+          
+            
+          
           <div class="text-md-center text-xl-left">
             {% if rec_trans[-1].donate %}
             <h6 class="mb-1">Donated</h6>
@@ -17,8 +25,12 @@
             {% endif %}
             <p class="text-muted mb-0">{{rec_trans[-1].time}}</p>
           </div>
+          {% endif %}
         </div>
         <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+          {% if rec_trans|length ==0 or rec_trans|length==1 %}
+        <h4>No Transactions to show !</h4>
+        {% else %}
           <div class="text-md-center text-xl-left">
             {% if rec_trans[0].donate %}
             <h6 class="mb-1">Donated</h6>
@@ -27,6 +39,7 @@
             {% endif %}
             <p class="text-muted mb-0">{{rec_trans[0].time}}</p>
           </div>
+          {% endif %}
         </div>
         
       </div>

@@ -224,7 +224,7 @@ def admin():
     av_bl,dTotal,dLabel,dValue=av_blood()
     av_comp_bl=avl_comp_bl()
     recent_trans= Transaction.query.order_by(Transaction.time.desc()).limit(5).all()
-    
+    print(av_comp_bl)
     return render_template('admin.html',scheduled_app=scheduled_app,pending_app=pending_app,av_blood=av_bl,recent_trans=recent_trans,dValue=dValue,dLabel=dLabel,dTotal=dTotal,avl_comp_bl=av_comp_bl)
 
 @app.route("/accApp/<int:id>",methods=['GET','POST'])
@@ -290,11 +290,11 @@ def sort_appointment():
     return pending_app,scheduled_app
 
 def avl_comp_bl():
-    pending_app,scheduled_app=sort_appointment()
+    all_appoint=Appointment.query.all()
     av_bl,dTotal,dLabel,dValue=av_blood()
     avl_comp_bl={}
     compatible_bl={'O +':['O +','O -'],'A +':['O +','O -','A +','A -'],'B +':['O +','O -','B +','B -'],'AB +':['O -','A -','B -','AB -','O +','A +','B +','AB +'],'O -':['O -'],'A -':['O -','A -'],'B -':['O -','B -'],'AB -':['O -','A -','B -','AB -']}
-    for app in scheduled_app:
+    for app in all_appoint:
         if not app.donate:
             donors=compatible_bl[app.user.blood]
             avl=[]
@@ -302,7 +302,6 @@ def avl_comp_bl():
                 if av_bl[i]>0:
                     avl.append(i)
             avl_comp_bl[app.user.blood]=avl
-    print(avl_comp_bl)
     return avl_comp_bl
         
 

@@ -11,7 +11,7 @@
         
         <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
           {% if rec_trans|length ==0 %}
-        <h4>No Transactions to show !</h4>
+          <h4 class="text-center " style="  color:rgb(102, 99, 99)">No transactions to show !</h4>
         {% else %}
             
           
@@ -29,7 +29,7 @@
         </div>
         <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
           {% if rec_trans|length ==0 or rec_trans|length==1 %}
-        <h4>No Transactions to show !</h4>
+          <h4 class="text-center " style="  color:rgb(102, 99, 99)">No transactions to show !</h4>
         {% else %}
           <div class="text-md-center text-xl-left">
             {% if rec_trans[0].donate %}
